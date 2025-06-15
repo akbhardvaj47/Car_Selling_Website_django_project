@@ -3,10 +3,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
-
-from listings.models import Car
-from .models import CarInquiry
+from django.contrib.auth.decorators import login_required
+from listings.models import Car, Category, CarInquiry
 from django.core.paginator import Paginator
+from django.utils.text import slugify
 
 # ------------------- Car Listings Page -------------------
 
@@ -141,3 +141,19 @@ def search(request):
             pass
 
     return render(request, 'pages/search.html', {'cars': cars})
+
+# -------------------- Add car ---------------------
+from .forms import CarForm
+@login_required
+def add_car(request):
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES)
+        if form.is_valid():
+            car = form.save(commit=False)
+            car.user = request.user
+            car.save()
+            return redirect('home')
+    else:
+        form = CarForm()
+
+    return render(request, 'pages/add_car.html', {'form': form})

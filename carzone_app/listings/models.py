@@ -42,7 +42,7 @@ class Car(models.Model):
         ('Damaged', 'Damaged'),
         ('Any','Any'),
     ]
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     location = models.CharField(max_length=255)

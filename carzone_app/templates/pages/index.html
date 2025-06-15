@@ -142,7 +142,7 @@
         <div class="slick-slider-area clearfix">
             <div class="row slick-carousel"
                 data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
-                {% for car in cars %}
+                {% for car in featured_car %}
                 {% if car.is_featured %}
                 <div class="slick-slide-item">
                     <div class="car-box-3">
@@ -224,10 +224,10 @@
         <!-- Main title -->
         <div class="main-title">
             <h1 class="display-4 font-weight-bold">Latest <span class="text-primary">Cars</span></h1>
-    <p class="lead text-muted">Browse our newest arrivals and find the car that fits your needs perfectly.</p>
+            <p class="lead text-muted">Browse our newest arrivals and find the car that fits your needs perfectly.</p>
         </div>
         <div class="row">
-            {% for latest_car in cars %}
+            {% for latest_car in latest_cars %}
             <div class="col-lg-4 col-md-6">
                 <div class="car-box">
                     <div class="car-thumbnail">
@@ -295,7 +295,11 @@
                     </div>
                 </div>
             </div>
+
             {% endfor %}
+        </div>
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'cars' %}" class="btn btn-primary">View More Cars</a>
         </div>
     </div>
 </div>

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'pages',
     'listings',
     'account',
+    'crispy_forms',
+    "crispy_bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'anshh9335@gmail.com'
 EMAIL_HOST_PASSWORD = 'hwln jfzg weow ofgi'
 DEFAULT_FROM_EMAIL = 'anshh9335@gmail.com'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
