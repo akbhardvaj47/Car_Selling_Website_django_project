@@ -1,0 +1,365 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Banner start -->
+<div class="banner" id="banner">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner banner-slider-inner text-center">
+            <div class="carousel-item banner-max-height active item-bg">
+                <img class="d-block w-100 h-100" src="{% static 'img/car-1.jpg' %}" alt="banner">
+                <div class="carousel-content container banner-info-2 bi-2 text-left">
+                    <h3>Wow Factor Standard</h3>
+                    <h5>Allow us to guide you through the innovative stress<br>
+                        free approach in finding your dream car.</h5>
+                    <a href="{% url 'services' %}" class="btn btn-lg btn-theme">Read more</a>
+                </div>
+            </div>
+            <div class="carousel-item banner-max-height item-bg">
+                <img class="d-block w-100 h-100" src="{% static 'img/car-2.jpg' %}" alt="banner">
+                <div class="carousel-content container banner-info-2 bi-2 text-left">
+                    <h3>Explore Your Dream Car</h3>
+                    <h5>Allow us to guide you through the innovative stress<br>
+                        free approach in finding your dream car.</h5>
+                    <a href="#" class="btn btn-lg btn-theme">Read more</a>
+                </div>
+            </div>
+            <div class="carousel-item banner-max-height item-bg">
+                <img class="d-block w-100 h-100" src="{% static 'img/car-3.jpg' %}" alt="banner">
+                <div class="carousel-content container banner-info-2 bi-2 text-left">
+                    <h3>We Are Wheel</h3>
+                    <h5>Allow us to guide you through the innovative stress<br>
+                        free approach in finding your dream car.</h5>
+                    <a href="#" class="btn btn-lg btn-theme">Read more</a>
+                </div>
+            </div>
+        </div>
+        <!-- Search box 3 start -->
+        <div class="search-box-4 sb-8">
+            <form action="{% url 'search' %}" method="get">
+                {% csrf_token %}
+
+                <!-- Keyword Search -->
+                <div class="form-group">
+                    <input type="text" name="keyword" placeholder="Search by name" class="form-control">
+                </div>
+
+                <!-- Brand Dropdown -->
+                <div class="form-group">
+                    <select class="form-control search-fields" name="select-brand">
+                        <option value="" selected disabled>Select Brand</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand.name }}">{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Model Dropdown -->
+                <div class="form-group">
+                    <select class="form-control search-fields" name="select-model">
+                        <option value="" selected disabled>Select Model</option>
+                        {% for model in models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Location Dropdown -->
+                <div class="form-group">
+                    <select class="form-control search-fields" name="select-location">
+                        <option value="" selected disabled>Select Location</option>
+                        {% for car in cars %}
+                        <option value="{{ car.location }}">{{ car.location }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Year Dropdown -->
+                <div class="form-group">
+                    <select class="form-control search-fields" name="select-year">
+                        <option value="" selected disabled>Select Year</option>
+                        {% for car in cars %}
+                        <option value="{{ car.year }}">{{ car.year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Car Type Dropdown -->
+                <div class="form-group">
+                    <select class="form-control search-fields" name="select-type">
+                        <option value="" selected disabled>Select Type Of Car</option>
+                        {% for type in car_types %}
+                        <option value="{{ type }}">{{ type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <!-- Price Range (NOTE: JS should populate these values on input change) -->
+                <div class="range-slider clearfix">
+                    <label>Price</label>
+                    <!-- You must have JavaScript populate these hidden inputs -->
+                    <input type="hidden" name="min_price" id="min_price" value="0">
+                    <input type="hidden" name="max_price" id="max_price" value="150000">
+                    <div data-min="0" data-max="150000" data-min-name="min_price" data-max-name="max_price"
+                        data-unit="USD" class="range-slider-ui ui-slider">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-block button-theme btn-md">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+
+
+        </div>
+        <!-- Search box 3 end -->
+        <a class="carousel-control-prev none-580" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="slider-mover-left" aria-hidden="true">
+                <i class="fa fa-angle-left"></i>
+            </span>
+        </a>
+        <a class="carousel-control-next none-580" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="slider-mover-right" aria-hidden="true">
+                <i class="fa fa-angle-right"></i>
+            </span>
+        </a>
+    </div>
+</div>
+<!-- Banner end -->
+
+<!-- Search box 2 end -->
+
+<!-- Featured car start -->
+<div class="featured-car content-area-5">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Featured <span>Cars</span></h1>
+            <p>Explore our exclusive selection of high-performance, stylish, and reliable vehicles. Hand-picked just for
+                you, these featured cars offer the best in value, quality, and driving experience.</p>
+
+        </div>
+        <!-- Slick slider area start -->
+        <div class="slick-slider-area clearfix">
+            <div class="row slick-carousel"
+                data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
+                {% for car in cars %}
+                {% if car.is_featured %}
+                <div class="slick-slide-item">
+                    <div class="car-box-3">
+                        <div class="car-thumbnail">
+                            <a href="{% url 'car_details' slug=car.slug %}" class="car-img">
+                                <div class="tag-2">Featured</div>
+                                <div class="price-box">
+                                    <span class="del"><del>${{car.original_price}}.00</del></span>
+                                    <br>
+                                    <span>${{car.discounted_price}}.00</span>
+                                </div>
+                                <img class="d-block w-100" src="{{car.main_image.url}}" alt="car"
+                                    style="height: 200px; width: 300px;">
+                            </a>
+                            <div class="carbox-overlap-wrapper">
+                                <div class="overlap-box">
+                                    <div class="overlap-btns-area">
+                                        <div class="car-magnify-gallery">
+                                            <a href="#" class="overlap-btn">
+                                                <i class="fa fa-expand"></i>
+                                                <img class="hidden" src="{{car.gallery_image_1.url}}">
+                                            </a>
+                                            <a href="#" class="hidden">
+                                                <img class="hidden" src="{{car.gallery_image_2.url}}">
+                                            </a>
+                                            <a href="#" class="hidden">
+                                                <img class="hidden" src="{{car.gallery_image_3.url}}">
+                                            </a>
+                                            <a href="#" class="hidden">
+                                                <img class="hidden" src="{{car.gallery_image_4.url}}">
+                                            </a>
+                                            <a href="#" class="hidden">
+                                                <img class="hidden" src="{{car.gallery_image_1.url}}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail">
+                            <h1 class="title">
+                                <a href="{% url 'car_details' car.slug %}">{{car.title}}</a>
+                            </h1>
+                            <div class="location">
+                                <a href="{% url 'car_details' car.slug %}">
+                                    <i class="flaticon-pin"></i>{{car.location}}
+                                </a>
+                            </div>
+                            <ul class="facilities-list clearfix">
+                                <li>{{car.fuel_type}}</li>
+                                <li>{{car.kilometers}} km</li>
+                                <li>{{car.transmission}}</li>
+                                <li>{{car.category}}</li>
+                                <li>{{car.color}}</li>
+                                <li>{{car.year}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="slick-btn">
+                <div class="slick-prev slick-arrow-buton sab-4">
+                    <i class="fa fa-angle-left"></i>
+                </div>
+                <div class="slick-next slick-arrow-buton sab-3">
+                    <i class="fa fa-angle-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Featured car end -->
+
+<!-- Rent car start -->
+<div class="featured-car content-area">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Latest <span>Cars</span></h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        <div class="row">
+            {% for latest_car in cars %}
+            <div class="col-lg-4 col-md-6">
+                <div class="car-box">
+                    <div class="car-thumbnail">
+                        <a href="{% url 'car_details' latest_car.slug %}" class="car-img">
+                            <div class="tag">For Sale</div>
+                            <img class="d-block w-100" src="{{latest_car.main_image.url}}" alt="car"
+                                style="height: 200px; width: 300px;">
+                            <div class="facilities-list clearfix">
+                                <ul>
+                                    <li>
+                                        <span><i class="flaticon-way"></i></span>{{latest_car.kilometers}} km
+                                    </li>
+                                    <li>
+                                        <span><i class="flaticon-calendar-1"></i></span>{{latest_car.year}}
+                                    </li>
+                                    <li>
+                                        <span><i
+                                                class="flaticon-manual-transmission"></i></span>{{latest_car.transmission}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </a>
+                        <div class="carbox-overlap-wrapper">
+                            <div class="overlap-box">
+                                <div class="overlap-btns-area">
+                                    <div class="car-magnify-gallery">
+                                        <a href="{{latest_car.gallery_image_1.url}}" class="overlap-btn">
+                                            <i class="fa fa-expand"></i>
+                                            <img class="hidden" src="{{latest_car.gallery_image_1.url}}">
+                                        </a>
+                                        <a href="{{latest_car.gallery_image_1.url}}" class="hidden">
+                                            <img class="hidden" src="{{latest_car.gallery_image_1.url}}">
+                                        </a>
+                                        <a href="{{latest_car.gallery_image_1.url}}" class="hidden">
+                                            <img class="hidden" src="{{latest_car.gallery_image_1.url}}">
+                                        </a>
+                                        <a href="{{latest_car.gallery_image_1.url}}" class="hidden">
+                                            <img class="hidden" src="{{latest_car.gallery_image_1.url}}">
+                                        </a>
+                                        <a href="{{latest_car.gallery_image_1.url}}" class="hidden">
+                                            <img class="hidden" src="{{latest_car.gallery_image_1.url}}">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail">
+                        <h1 class="title">
+                            <a href="{% url 'car_details' latest_car.slug %}">{{latest_car.title}}</a>
+                        </h1>
+                        <div class="location">
+                            <a href="{% url 'car_details' latest_car.slug %}">
+                                <i class="flaticon-pin"></i>{{latest_car.location}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer clearfix">
+                        <div class="pull-left ratings days">
+                            <p class="cartype">{{latest_car.transmission}}</p>
+                        </div>
+                        <div class="pull-right">
+                            <p class="price">${{latest_car.price}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Rent car end -->
+
+
+<!-- Our team start -->
+<div class="our-team content-area bg-grea-3">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Executive <span>Team</span></h1>
+            <p>Meet the amazing people behind CarZone</p>
+        </div>
+        <!-- Slick slider area start -->
+        <div class="slick-slider-area clearfix">
+            <div class="row slick-carousel"
+                data-slick='{"slidesToShow": 4, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
+                {% for team in teams %}
+                <div class="slick-slide-item">
+                    <div class="team-1">
+                        <div class="photo">
+                            <a href="#">
+                                <img src="{{team.image.url}}" alt="team-1" class="img-fluid">
+                            </a>
+                            <div class="social-list clearfix">
+                                <a href="{{team.facebook_link}}" class="facebook-bg"><i class="fa fa-facebook"></i></a>
+                                <a href="{{team.twitter_link}}" class="twitter-bg"><i class="fa fa-twitter"></i></a>
+                                <a href="{{team.google_plus_link}}" class="google-bg"><i class="fa fa-google"></i></a>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <h4><a href="team-detail.html">{{team.first_name}} {{team.last_name}}</a></h4>
+                            <h5>{{team.designation}}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Our team end -->
+
+<!-- Intro section start -->
+<div class="intro-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-12">
+                <div class="intro-text">
+                    <h3 class="text-dark">Do You Have Questions ?</h3>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <a href="{% url 'contact' %}" class="btn btn-md">Get in Touch</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Intro section end -->
+
+{% endblock %}

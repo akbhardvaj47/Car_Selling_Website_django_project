@@ -1,0 +1,41 @@
+<!-- Top header start -->
+<header class="top-header th-2 top-header-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-7">
+                <div class="list-inline">
+                    <a href="tel:"><i class="fa fa-phone"></i>+91 8303166787</a>
+                    <a href=""><i class="fa fa-envelope"></i>amitbhardvaj830@gmail.com</a>
+                    <a href=""><i class="fa fa-clock-o"></i>Mon - Sun: 8:00am - 6:00pm</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-5">
+                <ul class="top-social-media pull-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="sign-in">
+                            <i class="fa fa-user"></i> Dashboard
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{% url 'login' %}" class="sign-in">
+                            <i class="fa fa-sign-in"></i> Login
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    {% else %}
+                    <li>
+                        <a href="{% url 'register' %}" class="sign-in"><i class="fa fa-user"></i> Register</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Top header end -->

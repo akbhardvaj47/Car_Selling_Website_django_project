@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Featured car start -->
+<div class="featured-car content-area">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Find Your <span>Perfect Ride</span></h1>
+            <p>Browse through a wide selection of top-quality cars to match your lifestyle, budget, and performance needs.</p>
+        </div>
+        <div class="row">
+            {% if cars %}
+                {% for car in cars %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="car-box">
+                            <div class="car-thumbnail">
+                                <a href="{% url 'car_details' slug=car.slug %}" class="car-img">
+                                    <div class="tag">For {{ car.condition|title }}</div>
+                                    {% if car.main_image %}
+                                        <img class="d-block w-100" src="{{ car.main_image.url }}" alt="{{ car.title }}">
+                                    {% else %}
+                                        <img class="d-block w-100" src="{% static 'img/default-car.jpg' %}" alt="Default car image">
+                                    {% endif %}
+                                    <div class="facilities-list clearfix">
+                                        <ul>
+                                            <li><span><i class="flaticon-way"></i></span>{{ car.kilometers }} km</li>
+                                            <li><span><i class="flaticon-calendar-1"></i></span>{{ car.year }}</li>
+                                            <li><span><i class="flaticon-manual-transmission"></i></span>{{ car.transmission }}</li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="detail">
+                                <h1 class="title">
+                                    <a href="{% url 'car_details' slug=car.slug %}">{{ car.title }}</a>
+                                </h1>
+                                <div class="location">
+                                    <a href="{% url 'car_details' slug=car.slug %}">
+                                        <i class="flaticon-pin"></i>{{ car.location }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="footer clearfix">
+                                <div class="pull-left ratings days">
+                                    <p class="cartype">{{ car.body_style }}</p>
+                                </div>
+                                <div class="pull-right">
+                                    <p class="price">${{ car.discounted_price }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p>No cars match your search criteria.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- Featured car end -->
+
+{% endblock %}
