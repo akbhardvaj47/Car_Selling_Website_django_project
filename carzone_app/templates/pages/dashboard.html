@@ -24,6 +24,7 @@
             <p>Here are the cars that you have inquired about</p>
         </div>
 	<table class="table table-hover">
+        {% if cars %}
 	  <thead>
 		<tr>
 		  <th scope="col">#</th>
@@ -33,28 +34,17 @@
 		  <th scope="col">Action</th>
 		</tr>
 	  </thead>
+      {% endif %}
 	  <tbody>
+        {% for enq_car in cars %}
 		<tr>
 		  <th scope="row">1</th>
-		  <td>Lamborgini Huracan</td>
-		  <td>Austin</td>
-		  <td>$25000</td>
-		  <td><a href="#" class="btn btn-outline-dark">View Car</a></td>
+		  <td>{{enq_car.car.title}}</td>
+		  <td>{{enq_car.car.location}}</td>
+		  <td>${{enq_car.car.discounted_price}}</td>
+		  <td><a href="{% url 'car_details' enq_car.car.slug %}" class="btn btn-outline-dark">View Car</a></td>
 		</tr>
-		<tr>
-		  <th scope="row">2</th>
-		  <td>Lamborgini Huracan</td>
-		  <td>Austin</td>
-		  <td>$25000</td>
-		  <td><a href="#" class="btn btn-outline-dark">View Car</a></td>
-		</tr>
-		<tr>
-		  <th scope="row">3</th>
-		  <td>Lamborgini Huracan</td>
-		  <td>Austin</td>
-		  <td>$25000</td>
-		  <td><a href="#" class="btn btn-outline-dark">View Car</a></td>
-		</tr>
+        {% endfor %}
 	  </tbody>
 	</table>
 </div>

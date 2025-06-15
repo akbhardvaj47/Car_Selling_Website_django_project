@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from account.models import Contact
+from listings.models import Car, CarInquiry, Category
 
+# ------------------ LOGIN VIEW ------------------
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -27,7 +29,7 @@ def login_view(request):
     return render(request, 'pages/login.html')
 
 
-
+# ------------------ REGISTER VIEW ------------------
 def register_view(request):
     if request.method == 'POST':
         first_name = request.POST.get('firstname')
@@ -56,46 +58,58 @@ def register_view(request):
             first_name=first_name,
             last_name=last_name,
         )
+
         send_mail(
             subject='Welcome to Our Car Selling Store!',
-            message = f"""
-            Hi {first_name},
+            message=f"""
+Hi {first_name},
 
-            Welcome to [Ak Car Store]! 🚗
+Welcome to Ak Car Store! 🚗
 
-            We're excited to have you on board. Whether you're looking to buy your dream car or sell your current one, you've just joined a community of car enthusiasts who value great deals and trusted service.
+We're excited to have you on board. Whether you're looking to buy your dream car or sell your current one, you've just joined a community of car enthusiasts who value great deals and trusted service.
 
-            Here’s what you can do next:
-            - 🚘 Browse thousands of verified car listings
-            - 📤 Post your own car for sale with ease
-            - 🤝 Connect directly with buyers and sellers
+Here’s what you can do next:
+- 🚘 Browse thousands of verified car listings
+- 📤 Post your own car for sale with ease
+- 🤝 Connect directly with buyers and sellers
 
-            We're here to help you every mile of the way.
+We're here to help you every mile of the way.
 
-            Thanks again for joining us — your journey starts now!
+Thanks again for joining us — your journey starts now!
 
-            Best regards,  
-            The [Your Car Site Name] Team  
-            [Website URL]
-            """,
+Best regards,  
+The Ak Car Store Team  
+www.akcarstore.com
+""",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             fail_silently=False,
         )
+
         messages.success(request, 'Account created successfully. Please log in.')
-        return redirect('login') 
+        return redirect('login')
 
     return render(request, 'pages/signup.html')
 
 
+# ------------------ LOGOUT VIEW ------------------
 def logout_view(request):
     logout(request)
     return redirect('login')
 
+
+# ------------------ DASHBOARD ------------------
 def dashboard(request):
-    return render(request, 'pages/dashboard.html')
+    if request.user.is_staff or request.user.is_superuser:
+        return redirect('/admin/')
+    user = request.user
+    cars = CarInquiry.objects.filter(user=user)
+    return render(request, 'pages/dashboard.html', {
+        'cars': cars,
+    })
 
 
+# ------------------ CONTACT ------------------
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -105,43 +119,44 @@ def contact(request):
         message = request.POST.get('message')
 
         # Save to DB
-        contact_entry = Contact.objects.create(
+        Contact.objects.create(
             name=name,
             email=email,
             subject=subject,
             phone=phone,
             message=message
         )
-        
+
         send_mail(
             subject="Thank You for Contacting Ak Car Store!",
             message=f"""
-                Hi {name},
+Hi {name},
 
-                Thank you for reaching out to Ak Car Store!
+Thank you for reaching out to Ak Car Store!
 
-                We’ve received your message and one of our team members will get back to you shortly.
+We’ve received your message and one of our team members will get back to you shortly.
 
-                Here’s a summary of your inquiry:
-                -------------------------------------------------
-                Subject: {subject}
-                Message: {message}
-                -------------------------------------------------
+Here’s a summary of your inquiry:
+-------------------------------------------------
+Subject: {subject}
+Message: {message}
+-------------------------------------------------
 
-                If you have any urgent questions, feel free to call us at +91 83031 66787 or reply to this email anshh9335@gmail.com.
+If you have any urgent questions, feel free to call us at +91 83031 66787 or reply to this email (anshh9335@gmail.com).
 
-                Thank you again for your interest in CarZone — your trusted place to buy and sell cars!
+Thank you again for your interest in Ak Car Store — your trusted place to buy and sell cars!
 
-                Best regards,  
-                CarZone Team  
-                www.carzone.com
-                """,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=True 
-                ),
+Best regards,  
+Ak Car Store Team  
+www.akcarstore.com
+""",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=True
+        )
 
         messages.success(request, 'Your message has been sent successfully.')
         return redirect('contact')
 
     return render(request, 'pages/contact.html')
+

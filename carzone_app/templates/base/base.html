@@ -39,6 +39,11 @@
 </head>
 <body>
 <div class="page_loader"></div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 
 {% if not 'login' in request.path and not 'register' in request.path %}
 
@@ -47,11 +52,7 @@
 
 {% endif %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+
 
 
 

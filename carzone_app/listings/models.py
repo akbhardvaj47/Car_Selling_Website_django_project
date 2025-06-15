@@ -38,6 +38,9 @@ class Car(models.Model):
     CONDITION_CHOICES = [
         ('Brand New', 'Brand New'),
         ('Used', 'Used'),
+        ('Semi New', 'Semi new'),
+        ('Damaged', 'Damaged'),
+        ('Any','Any'),
     ]
 
     title = models.CharField(max_length=255)
@@ -49,8 +52,10 @@ class Car(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='cars')
     color = models.CharField(max_length=50, default='White')
     year = models.PositiveIntegerField()
+    
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2)
+    rent_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,  help_text="Price per day/week/month for rent")
     is_featured = models.BooleanField(default=False)
 
     # Detailed specs

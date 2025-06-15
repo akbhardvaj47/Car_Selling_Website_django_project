@@ -12,7 +12,7 @@
                     <h3>Wow Factor Standard</h3>
                     <h5>Allow us to guide you through the innovative stress<br>
                         free approach in finding your dream car.</h5>
-                    <a href="{% url 'services' %}" class="btn btn-lg btn-theme">Read more</a>
+                    <a href="{% url 'about' %}" class="btn btn-lg btn-theme">Read more</a>
                 </div>
             </div>
             <div class="carousel-item banner-max-height item-bg">
@@ -30,7 +30,7 @@
                     <h3>We Are Wheel</h3>
                     <h5>Allow us to guide you through the innovative stress<br>
                         free approach in finding your dream car.</h5>
-                    <a href="#" class="btn btn-lg btn-theme">Read more</a>
+                    <a href="{% url 'about' %}" class="btn btn-lg btn-theme">Read more</a>
                 </div>
             </div>
         </div>
@@ -38,11 +38,6 @@
         <div class="search-box-4 sb-8">
             <form action="{% url 'search' %}" method="get">
                 {% csrf_token %}
-
-                <!-- Keyword Search -->
-                <div class="form-group">
-                    <input type="text" name="keyword" placeholder="Search by name" class="form-control">
-                </div>
 
                 <!-- Brand Dropdown -->
                 <div class="form-group">
@@ -228,8 +223,8 @@
     <div class="container">
         <!-- Main title -->
         <div class="main-title">
-            <h1>Latest <span>Cars</span></h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h1 class="display-4 font-weight-bold">Latest <span class="text-primary">Cars</span></h1>
+    <p class="lead text-muted">Browse our newest arrivals and find the car that fits your needs perfectly.</p>
         </div>
         <div class="row">
             {% for latest_car in cars %}
@@ -295,7 +290,7 @@
                             <p class="cartype">{{latest_car.transmission}}</p>
                         </div>
                         <div class="pull-right">
-                            <p class="price">${{latest_car.price}}</p>
+                            <p class="price">${{latest_car.discounted_price}}</p>
                         </div>
                     </div>
                 </div>

@@ -2,17 +2,32 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from listings.models import Car
-from .models import CarInquiry
 from django.db.models import Q
 
-def cars(request):
-    return render(request, 'pages/cars.html')
+from listings.models import Car
+from .models import CarInquiry
+from django.core.paginator import Paginator
 
+# ------------------- Car Listings Page -------------------
+
+def cars(request):
+    cars = Car.objects.all().order_by('-id')
+    paginator = Paginator(cars, 6) 
+    page = request.GET.get('page')
+    cars = paginator.get_page(page)
+
+    return render(request, 'pages/cars.html', {
+        'cars': cars,
+    })
+
+
+# ------------------- Car Details + Inquiry Form -------------------
 def car_details(request, slug):
     car = get_object_or_404(Car, slug=slug)
 
     if request.method == 'POST':
+        user = request.user if request.user.is_authenticated else None
+
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         customer_need = request.POST.get('customer_need')
@@ -22,8 +37,14 @@ def car_details(request, slug):
         phone = request.POST.get('phone')
         message = request.POST.get('message')
 
+        # 🛑 Prevent duplicate inquiries for logged-in users
+        if user and CarInquiry.objects.filter(user=user, car=car).exists():
+            messages.warning(request, 'You have already submitted an inquiry for this car.')
+            return redirect('car_details', slug=car.slug)
+
+        # ✅ Create new inquiry
         CarInquiry.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=user,
             car=car,
             first_name=first_name,
             last_name=last_name,
@@ -35,17 +56,24 @@ def car_details(request, slug):
             message=message
         )
 
-        email_subject = f"Your Car Inquiry for {car.title} Has Been Received"
+        # ✅ Send confirmation email
+        email_subject = f"Inquiry Received for {car.title}"
         email_message = f"""
-        Dear {first_name} {last_name},
+Dear {first_name} {last_name},
 
-        Thank you for your interest in the {car.title}!
+Thank you for your interest in the {car.title}!
 
-        We have received your inquiry...
+Our team has received your inquiry and will get back to you shortly.
 
-        Best regards,
-        CarZone Auto Sales Team
-        """
+Here’s a quick summary:
+Car: {car.title}
+Location: {car.location}
+Message: {message or "No message provided"}
+
+Best regards,  
+CarZone Auto Sales Team
+www.carzone.com
+"""
 
         send_mail(
             subject=email_subject,
@@ -63,7 +91,7 @@ def car_details(request, slug):
     })
 
 
-
+# ------------------- Search -------------------
 def search(request):
     cars = Car.objects.all()
 
@@ -76,6 +104,7 @@ def search(request):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
 
+    # Apply filters if provided
     if keyword:
         cars = cars.filter(
             Q(title__icontains=keyword) |
@@ -100,12 +129,15 @@ def search(request):
         cars = cars.filter(body_style__iexact=car_type)
 
     if min_price:
-        cars = cars.filter(discounted_price__gte=min_price)
+        try:
+            cars = cars.filter(discounted_price__gte=float(min_price))
+        except ValueError:
+            pass
 
     if max_price:
-        cars = cars.filter(discounted_price__lte=max_price)
+        try:
+            cars = cars.filter(discounted_price__lte=float(max_price))
+        except ValueError:
+            pass
 
-    context = {
-        'cars': cars,
-    }
-    return render(request, 'pages/search.html', context)
+    return render(request, 'pages/search.html', {'cars': cars})
