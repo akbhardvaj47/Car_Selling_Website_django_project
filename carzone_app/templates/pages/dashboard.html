@@ -48,6 +48,42 @@
 	  </tbody>
 	</table>
 </div>
+
+
+<div class="container mt-50 mb-50">
+	<div class="main-title" style="text-align:left !important;">
+           <h2>Your Cars</h2>
+        </div>
+	<table class="table table-hover">
+        {% if cars %}
+	  <thead>
+		<tr>
+		  <th scope="col">#</th>
+		  <th scope="col">Car Name</th>
+		  <th scope="col">Location</th>
+		  <th scope="col">Price</th>
+		  <th scope="col">Rent Price</th>
+		  <th scope="col">Action</th>
+		</tr>
+	  </thead>
+      {% endif %}
+	  <tbody>
+        {% for car in sold_cars %}
+		<tr>
+		  <th scope="row">1</th>
+		  <td>{{car.title}}</td>
+		  <td>{{car.location}}</td>
+		  <td>${{car.discounted_price}}</td>
+		  <td>${{car.rent_price}}</td>
+		  <td>
+            <a href="{% url 'car_details' car.slug %}" class="btn btn-outline-dark">View</a>
+            <a href="{% url 'edit_car' car.id %}" class="btn btn-outline-dark">Edit</a>
+        </td>
+		</tr>
+        {% endfor %}
+	  </tbody>
+	</table>
+</div>
 <div class="text-right mb-3 col-md-12">
     <a href="{% url 'add_car' %}" class="btn btn-success">Sell Your Car</a>
 </div>

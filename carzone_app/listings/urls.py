@@ -5,4 +5,5 @@ urlpatterns = [
    path('car-details/<slug:slug>/', views.car_details, name='car_details'),
    path('search/', views.search, name='search'),
    path('add-car/', views.add_car, name='add_car'),
+   path('edit-car/<int:car_id>/', views.edit_car, name='edit_car'),
 ]

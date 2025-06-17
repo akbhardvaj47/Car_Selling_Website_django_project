@@ -103,9 +103,11 @@ def dashboard(request):
     if request.user.is_staff or request.user.is_superuser:
         return redirect('/admin/')
     user = request.user
+    sold_cars=Car.objects.filter(user=user)
     cars = CarInquiry.objects.filter(user=user)
     return render(request, 'pages/dashboard.html', {
         'cars': cars,
+        'sold_cars':sold_cars,
     })
 
 
